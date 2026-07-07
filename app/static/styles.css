@@ -1,0 +1,242 @@
+/* my-post — clean modern light theme, mobile-first */
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 4px 12px rgba(16, 24, 40, .06);
+  --ok: #15803d;
+  --err: #dc2626;
+  --warn: #b45309;
+
+  /* per-platform accents (brand-inspired, tuned for distinction) */
+  --acc-bluesky: #0ea5e9;
+  --acc-x: #111827;
+  --acc-threads: #64748b;
+  --acc-instagram: #dd2a7b;
+  --ig-grad: linear-gradient(135deg, #f58529, #dd2a7b, #515bd4);
+}
+
+[data-platform="bluesky"]   { --acc: var(--acc-bluesky); }
+[data-platform="x"]         { --acc: var(--acc-x); }
+[data-platform="threads"]   { --acc: var(--acc-threads); }
+[data-platform="instagram"] { --acc: var(--acc-instagram); }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ---------- layout ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px 8px;
+}
+.app-header .logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #0ea5e9, #4f46e5);
+  flex: none;
+  box-shadow: var(--shadow);
+}
+.app-header .brand { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.app-header .tagline { margin: 0; font-size: 13px; color: var(--muted); }
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.results-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.page-title { margin: 0; font-size: 18px; font-weight: 700; }
+.back { color: var(--muted); text-decoration: none; font-size: 14px; }
+.back:hover { color: var(--text); }
+
+/* ---------- card ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+/* ---------- compose form ---------- */
+.compose { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field .label,
+.platforms legend {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+.platforms legend { margin-bottom: 8px; padding: 0; }
+
+textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 16px;            /* prevents iOS focus zoom */
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  resize: vertical;
+  min-height: 120px;
+  background: #fff;
+  color: var(--text);
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+input[type=file] { font: inherit; font-size: 14px; }
+
+/* ---------- platform chips ---------- */
+.platforms { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+
+.chip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.chip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.chip .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--acc);
+  flex: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 18%, transparent);
+}
+.chip[data-platform="instagram"] .dot { background: var(--ig-grad); }
+.chip .name { font-weight: 600; text-transform: capitalize; }
+.chip .counter {
+  margin-left: auto;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.chip.checked {
+  border-color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 8%, var(--surface));
+}
+.chip.checked .counter { color: var(--acc); }
+.chip:focus-within {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 30%, transparent);
+}
+.counter.warn { color: var(--warn); }
+.counter.over { color: var(--err); font-weight: 700; }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .15s, border-color .15s, transform .05s;
+}
+.btn:hover { background: #f9fafb; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-block { display: flex; width: 100%; }
+
+/* ---------- results ---------- */
+.result { position: relative; overflow: hidden; padding-top: 24px; }
+.result::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--acc);
+}
+.result[data-platform="instagram"]::before { background: var(--ig-grad); }
+.platform-name {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--acc);
+}
+.result[data-platform="instagram"] .platform-name {
+  background: var(--ig-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.status { margin: 0 0 8px; font-weight: 500; }
+.status.ok { color: var(--ok); }
+.status.err { color: var(--err); }
+.steps { margin: 0 0 16px; padding-left: 20px; line-height: 1.6; color: #374151; }
+.steps li { margin-bottom: 6px; }
+.actions { display: flex; flex-direction: column; gap: 8px; }
+
+@media (min-width: 480px) {
+  .actions { flex-direction: row; flex-wrap: wrap; }
+  .actions .btn { width: auto; }
+  .actions .btn-primary { flex: 1; }
+}
