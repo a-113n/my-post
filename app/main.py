@@ -47,3 +47,26 @@ async def post(request: Request,
         "results.html",
         {"results": results, "image_b64": image_b64},
     )
+
+
+if __name__ == "__main__":
+    # LAN entrypoint: binds all interfaces and enables HTTPS if certs/ exists.
+    #   python -m app.main
+    # Clipboard (copy text/image) only works in a secure context, i.e. https://
+    # or http://localhost — so generate a cert first: scripts/make-cert.sh
+    import os
+
+    import uvicorn
+
+    cert, key = Path("certs/cert.pem"), Path("certs/key.pem")
+    kwargs = {
+        "host": os.getenv("MPS_HOST", "0.0.0.0"),
+        "port": int(os.getenv("MPS_PORT", "8000")),
+    }
+    if cert.exists() and key.exists():
+        kwargs.update({"ssl_certfile": str(cert), "ssl_keyfile": str(key)})
+        print("HTTPS on — open https://<this-host>:8000 from your phone")
+    else:
+        print("No certs/ found — plain HTTP (clipboard won't work on LAN). "
+              "Run scripts/make-cert.sh for HTTPS.")
+    uvicorn.run(app, **kwargs)
