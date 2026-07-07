@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Results</h1>
+<a href="/">← Compose another</a>
+{% for r in results %}
+  <section class="card" data-platform="{{ r.platform }}">
+    <h2>{{ r.platform }}</h2>
+    {% if r.posted %}
+      <p>✅ Posted — <a href="{{ r.url }}" target="_blank">view</a></p>
+    {% elif r.error %}
+      <p>❌ Error: {{ r.error }}</p>
+    {% else %}
+      <script type="application/json" data-handoff="{{ r.platform }}">
+        {"url": {{ r.handoff.url | tojson }},
+         "text": {{ (r.handoff.clipboard_text or "") | tojson }},
+         "has_image": {{ (r.handoff.clipboard_image_png is not none) | tojson }},
+         "image_b64": {{ image_b64.get(r.platform, "") | tojson }}}
+      </script>
+      <ol>
+        {% for step in r.handoff.instructions %}<li>{{ step }}</li>{% endfor %}
+      </ol>
+      <button onclick="mp.openTab('{{ r.platform }}')">Open {{ r.platform }}</button>
+      {% if r.handoff.clipboard_text %}<button onclick="mp.copyText('{{ r.platform }}')">Copy text</button>{% endif %}
+      {% if r.handoff.clipboard_image_png %}<button onclick="mp.copyImage('{{ r.platform }}')">Copy image</button>{% endif %}
+    {% endif %}
+  </section>
+{% endfor %}
+<script src="/static/handoff.js"></script>
+{% endblock %}
