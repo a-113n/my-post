@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>my-post</h1>
+<form action="/post" method="post" enctype="multipart/form-data">
+  <p><textarea name="text" id="text" rows="6" cols="60"></textarea></p>
+  <p><input type="file" name="image" accept="image/*"></p>
+  <fieldset>
+    <legend>Platforms</legend>
+    {% for p in platforms %}
+      <label>
+        <input type="checkbox" name="platforms" value="{{ p }}" data-limit="{{ limits[p] }}">
+        {{ p }} <small class="counter" data-for="{{ p }}">{{ limits[p] }}</small>
+      </label>
+    {% endfor %}
+  </fieldset>
+  <p><button type="submit">Post</button></p>
+</form>
+<script src="/static/counter.js"></script>
+{% endblock %}
