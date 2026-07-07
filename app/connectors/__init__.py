@@ -2,12 +2,14 @@ from .base import Connector
 from .x import XConnector
 from .threads import ThreadsConnector
 from .instagram import InstagramConnector
+from .bluesky import BlueskyConnector
 
-# Bluesky is registered in Phase 3 (needs settings); keep it out for now.
+# Bluesky registered; uses real atproto client when no client is injected.
 REGISTRY = {
     "x": XConnector,
     "threads": ThreadsConnector,
     "instagram": InstagramConnector,
+    "bluesky": BlueskyConnector,
 }
 
 def get_connectors(names: list[str]) -> list[Connector]:
