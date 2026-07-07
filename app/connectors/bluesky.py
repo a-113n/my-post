@@ -18,10 +18,14 @@ class BlueskyConnector:
     def post(self, text: str, media=()) -> Result:
         try:
             client = self._ensure_client()
-            images = []
-            for m in media[:4]:
-                images.append(client.upload_blob(m.data).blob)
-            res = client.send_post(text, images=images or None)
+            blobs = [client.upload_blob(m.data).blob for m in media[:4]]
+            embed = None
+            if blobs:
+                from atproto import models
+                embed = models.AppBskyEmbedImages.Main(
+                    images=[models.AppBskyEmbedImages.Image(alt="", image=b) for b in blobs]
+                )
+            res = client.send_post(text, embed=embed)
             rkey = res.uri.rsplit("/", 1)[-1]
             return Result(
                 platform=self.name,
