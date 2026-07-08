@@ -61,11 +61,11 @@ if __name__ == "__main__":
     cert, key = Path("certs/cert.pem"), Path("certs/key.pem")
     kwargs = {
         "host": os.getenv("MPS_HOST", "0.0.0.0"),
-        "port": int(os.getenv("MPS_PORT", "8000")),
+        "port": int(os.getenv("MPS_PORT", "8700")),
     }
     if cert.exists() and key.exists():
         kwargs.update({"ssl_certfile": str(cert), "ssl_keyfile": str(key)})
-        print("HTTPS on — open https://<this-host>:8000 from your phone")
+        print("HTTPS on — open https://<this-host>:8700 from your phone")
     else:
         print("No certs/ found — plain HTTP (clipboard won't work on LAN). "
               "Run scripts/make-cert.sh for HTTPS.")
