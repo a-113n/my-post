@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, Form, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from starlette.middleware.trustedhost import TrustedHostsMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from .connectors import get_connectors
 from .connectors.base import Media
