@@ -18,7 +18,7 @@ app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="stat
 
 # Allow Tailscale hostname in addition to localhost and LAN access
 app.add_middleware(
-    TrustedHostsMiddleware,
+    TrustedHostMiddleware,
     allowed_hosts=[
         "localhost",
         "127.0.0.1",
