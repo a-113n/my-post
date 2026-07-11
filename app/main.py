@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request, Form, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.trustedhost import TrustedHostsMiddleware
 
 from .connectors import get_connectors
 from .connectors.base import Media
@@ -14,6 +15,18 @@ app = FastAPI(title="my-post")
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+
+# Allow Tailscale hostname in addition to localhost and LAN access
+app.add_middleware(
+    TrustedHostsMiddleware,
+    allowed_hosts=[
+        "localhost",
+        "127.0.0.1",
+        "*.local",
+        "mbp-server.taildf5bdc.ts.net",
+        "*",  # Allow any host (remove if you want stricter security)
+    ],
+)
 
 PLATFORMS = ["bluesky", "x", "threads", "instagram"]
 LIMITS = {"bluesky": 300, "x": 280, "threads": 500, "instagram": 2200}
